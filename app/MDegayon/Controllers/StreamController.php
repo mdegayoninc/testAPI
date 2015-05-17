@@ -18,14 +18,14 @@ class StreamController implements ControllerProviderInterface
         
         $controllers->get(  '/', 
                             array($this, 
-                            'showStream'))->bind('foro_show');
+                            'showStream'))->bind('show_stream');
         
         return $controllers;
     }
     
     public function showStream(Application $app)
     {
-        echo "test!";
+        return "showStream!";
     }
 }
 
