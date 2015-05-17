@@ -1,21 +1,17 @@
 <?php 
-
 require_once __DIR__.'/../vendor/autoload.php';
+
+
+use MDegayon\Controllers\StreamController as StreamController;
+use MDegayon\Controllers\ConnectionLogController as ConnectionLogController;
+
 
 $app = new Silex\Application();
 
-$app->get('/hello/{name}', function ($name) use ($app) {
-    return 'Hello '.$app->escape($name);
-});
-
-$app->get('/jarl/', function () use ($app) {
-    return 'jarl';
-});
+$app->mount('/', new StreamController());
+$app->mount('/connections', new ConnectionLogController());
 
 
-$app->get('/', function () use ($app) {
-    return 'Index';
-});
 
 $app->run();
 
