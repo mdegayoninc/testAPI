@@ -1,0 +1,13 @@
+{
+    "name": "vendor/test-a-p-i",
+    "description": "Testing Wisembly API.",
+    "authors": [
+        {
+            "name": "Miguel Degayon",
+            "email": "mdegayon@gmail.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "~1.2"
+    }
+}
