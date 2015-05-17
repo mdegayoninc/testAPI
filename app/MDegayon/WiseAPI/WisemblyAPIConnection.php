@@ -63,8 +63,10 @@ class WisemblyAPIConnection
         
     }    
     
-   private static function createUserFromResponse(\Httpful\Response $response)
-   {
+//    TODO : Refactor these two methods (CreateXXXFrom...) might be placed in 
+//    some parser classes
+    private static function createUserFromResponse(\Httpful\Response $response)
+    {
 
         $user = false;
         
@@ -80,7 +82,7 @@ class WisemblyAPIConnection
         }
        
         return $user;
-   }
+    }
    
     private static function createSessionAPI(\Httpful\Response $response)
     {
