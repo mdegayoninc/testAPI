@@ -11,14 +11,23 @@ class Message {
     private $date, 
             $hash,
             $user,
+            $via,
             $quote;
     
-    public function __construct($date, $quote, $hash, $user = null) 
+    const VIA_DEFAULT = 'web';
+    
+    public function __construct($date, $quote, $hash, $via, $user = null) 
     {
         $this->date = $date;
         $this->quote = $quote;
         $this->hash = $hash;
         $this->user = $user;
+        $this->via = $via;
+    }
+    
+    public function getVia()
+    {
+        return $this->via;
     }
     
     public function getDate()
