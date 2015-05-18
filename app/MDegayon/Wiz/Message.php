@@ -2,12 +2,31 @@
 namespace MDegayon\Wiz;
 
 /**
- * Description of Message
+ * Message sent to Event stream
  *
- * @author Laura
+ * @author Miguel Degayon
  */
 class Message {
-    //put your code here
+    
+    private $date, 
+            $quote;
+    
+    public function __construct($date, $quote) 
+    {
+        $this->date = $date;
+        $this->quote = $quote;
+    }
+    
+    public function getDate()
+    {
+        return $this->date;
+    }
+    
+    public function getQuote()
+    {
+        return $this->quote;
+    }
+    
 }
 
 ?>
