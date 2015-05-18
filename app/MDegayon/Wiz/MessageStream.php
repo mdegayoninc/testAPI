@@ -22,6 +22,12 @@ class MessageStream
         
     }
     
+    public function getOwner()
+    {
+        return $this->wizOwner;
+        
+    }
+    
     public function setOwner(WizEvent $event)
     {
         $this->wizOwner = $event;
