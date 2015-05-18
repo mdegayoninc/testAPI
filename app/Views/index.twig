@@ -51,28 +51,57 @@
               </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
     </nav>      
+      
+    {% if errorMessage %}    
+        <div class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+        </div>
+    {% endif %}
+      
     <div class="container">
         <h1>
             {{ name }}
         </h1>
         <hr>
         <section class="row">
+            
             <h2>Stream</h2>
             
-            {% for message in messages %}
-            
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h4>
-                            {{ message.quote|e }}
-                        </h4>
-                        <small>publied at: {{ message.date|e }}</small>
+            <div class="col-md-12 ">
+                
+                <form method="POST" action="" class="horizontal-form">
+                    
+                    <div class="form-group">
+                        
+                        <label for="quote">What do you want to say?</label>
+                        <textarea class="form-control" 
+                                  name="quote"
+                                  id="quote"
+                                  rows="3" 
+                                  placeholder="What do you want to say?">
+                        </textarea>
                     </div>
-                </div>
-            {% else %}
-                <div class="alert alert-info" role="alert">No messages found</div>
-            {% endfor %}
+                    <button type="submit" class="btn btn-primary pull-right" >Post</button>
+                
+                </form>
+             </div>   
+            <div class="row"></div><br />
+            
+            <div class="col-md-12">
+                {% for message in messages %}
 
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>
+                                {{ message.quote|e }}
+                            </h4>
+                            <small>publied at: {{ message.date|e }}</small>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">No messages found</div>
+                {% endfor %}
+            </div>          
         </section>
             
     </div>
