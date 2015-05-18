@@ -52,23 +52,23 @@ class StreamController implements ControllerProviderInterface
                     HttpKernelInterface::SUB_REQUEST, false); 
         }
         
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        if(!isset($_SESSION['user']) || !isset($_SESSION['api'])){
+        if(     !(  $app['session']->get('user', false) ) || 
+                !(  $app['session']->get('api', false) )    ){
             
-            if (! ($this->serverConnect()) ){
+            if (! ($this->serverConnect($app)) ){
 
                 //Add error to template
-                $_SESSION['errorMessage'] = 'Unable to connect to remote API';
+                $app['session']->set('errorMessage', 
+                                    'Unable to connect to remote API');
+                
                 return $app->handle(Request::create('/'), 
                     HttpKernelInterface::SUB_REQUEST, false);  
             }
         }
         
-        $user = $_SESSION['user'];
-        $api = $_SESSION['api'];
-        
+        $user = $app['session']->get('user');
+        $api = $app['session']->get('api');
+
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $event = $userHelper->getFirstEvent();
                 
@@ -78,8 +78,9 @@ class StreamController implements ControllerProviderInterface
             try{
                 $eventHelper->addMessageToStream($quote);
             }catch(\InvalidArgumentException $e){
-                //Add error to template 
-                $_SESSION['errorMessage'] = 'Error while adding quote';
+                //Add error to template
+                $app['session']->set('errorMessage', 
+                                    'Error while adding quote');
             }
         }
         return $app->handle(Request::create('/'), 
@@ -88,26 +89,24 @@ class StreamController implements ControllerProviderInterface
     
     public function showStream(Application $app)
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $user = isset($_SESSION['user']) ? $_SESSION['user'] : false;
-        $api = isset($_SESSION['api']) ? $_SESSION['api'] : false;
+        
+        $user = $app['session']->get('user', false);
+        $api = $app['session']->get('api', false);
         
         //TODO : Check if session has expired
         //TODO : Handle scenario where only user or api can't be found. Try to connect again
-        //TODO : Replace Session by cache 
-        
+        //TODO : Replace Session by cache         
         if(!$user || !$api){
 
-            if ($this->serverConnect()){
+            if ($this->serverConnect($app)){
+
+                $user = $app['session']->get('user');
+                $api = $app['session']->get('api');   
                 
-                $user = $_SESSION['user'];
-                $api = $_SESSION['api'];
-             
             }else{
-                
+                //Add error to template;
+                return $app['twig']->render('index.twig', array( 
+                    'errorMessage' => 'Unable to connect to remote server') );
             }
         }
         
@@ -117,10 +116,12 @@ class StreamController implements ControllerProviderInterface
         $vars = array(  'name' => $stream->getOwner()->getName(),
                         'messages' => $stream->getMessages(),);
         
-        if( isset($_SESSION['errorMessage'])){
-            $vars['errorMessage'] = $_SESSION['errorMessage'];
+        if( $app['session']->get('errorMessage', false) ){
+            
+            $vars['errorMessage'] = $app['session']->get('errorMessage', false);
+            $app['session']->remove('errorMessage');
             unset($_SESSION['errorMessage']);
-        } 
+        }
         
         return $app['twig']->render('index.twig', $vars );
     }
@@ -136,9 +137,9 @@ class StreamController implements ControllerProviderInterface
         
     }
     
-    private function serverConnect()
+    private function serverConnect(Application $app)
     {
-
+        
         $success = true;
         
         $hash = $this->getHashForConnection();
@@ -147,14 +148,15 @@ class StreamController implements ControllerProviderInterface
                                     $conf->getParam('secret'), 
                                     $conf->getParam('app_id'), 
                                     $hash);
+        
         if($connectionResponse){
-            $_SESSION['user'] = $connectionResponse[API::USER_KEY];
-            $_SESSION['api'] = $connectionResponse[API::SESSION_API_KEY];
+            $app['session']->set('user', $connectionResponse[API::USER_KEY]);
+            $app['session']->set('api', $connectionResponse[API::SESSION_API_KEY]);
             
         }else{
-           //Some error 
             $success = false;
-        }                
+        }
+        return $success;
     }
 }
 
