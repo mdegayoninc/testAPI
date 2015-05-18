@@ -42,27 +42,24 @@ class StreamController implements ControllerProviderInterface
         
         $quote = $request->get('quote');
         
-        if($quote){
-            
-            $helper = new \MDegayon\RemoteHelper\WizEventHelper($api, $event);
-            
         //If there's no quote, we don't need to go any further. Just show stream
-        }else{
+        if(!$quote){
+            
             return $this->showStream($app);  
         }
         
         session_start();
         if(!isset($_SESSION['user']) || !isset($_SESSION['api'])){
             
-            if ($this->serverConnect()){
-                
-                $user = isset($_SESSION['user']);
-                $api = isset($_SESSION['api']);
-             
-            }else{
+            if (! ($this->serverConnect()) ){
+
                 //Add error to template
             }
         }
+        
+        $user = $_SESSION['user'];
+        $api = $_SESSION['api'];
+        
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $event = $userHelper->getFirstEvent();
         
@@ -94,8 +91,8 @@ class StreamController implements ControllerProviderInterface
 
             if ($this->serverConnect()){
                 
-                $user = isset($_SESSION['user']);
-                $api = isset($_SESSION['api']);
+                $user = $_SESSION['user'];
+                $api = $_SESSION['api'];
              
             }else{
                 
