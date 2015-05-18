@@ -4,6 +4,8 @@ namespace MDegayon\WiseAPI;
 use \Httpful\Request as Request;
 use MDegayon\WiseAPI\WisemblyAPIConnection as Connection;
 use MDegayon\Wiz\WizEvent as Event;
+use MDegayon\Wiz\Message as Message;
+use MDegayon\Wiz\MessageStream as MessageStream;
 /**
  * SessionAPI for logged in users
  *
@@ -11,6 +13,7 @@ use MDegayon\Wiz\WizEvent as Event;
  */
 class SessionAPI 
 {
+    //TODO: Most functions looks almost the same. I'm repeating myself here. REFACTOR
 
     private $token;
 
@@ -54,15 +57,61 @@ class SessionAPI
         return $events;      
     }
     
-    public function getStream()
+    public function getStream($eventKeyword)
     {
+        
+        $stream = false;
+
+        try{
+            
+            $response = Request::get( 
+                    Connection::API_ADDRESS .'/'.
+                    Connection::API_V4 . '/event/'.$eventKeyword.'/stream')
+                ->addHeader(SessionAPI::WISE_TOKEN_HEADER, $this->token)
+                ->send(); 
+
+        }catch(Exception $e){
+            $response = false;
+            $stream = false;    
+        }
+        
+        if ($response && 
+            $response->code != WisemblyAPIConnection::SUCCESSFUL_REQUEST_CODE){
+
+            throw new InvalidArgumentException
+                    ("Error while trying to connect to the API : ");
+        }else{
+            
+            $stream = $this->createStreamFromResponse($response);
+        }
+        
+
+        return $stream;          
         
     }
     
     public function addMessageToStream()
     {
+        //TODO
         
+    }
+    
+    private function createStreamFromResponse(\Httpful\Response $response)
+    {
+        $messages = array();
+                
+        foreach($response->body->success->data as $currentRawMessage){
+            
+            $messages[] = $this->parseMessage($currentRawMessage);
+        }
         
+        return new MessageStream($messages);
+    }
+    
+    private function parseMessage($rawMessage)
+    {
+        
+        return new Message($rawMessage->published_at, $rawMessage->quote);
     }
     
     private function createEventsFromResponse(\Httpful\Response $response)
