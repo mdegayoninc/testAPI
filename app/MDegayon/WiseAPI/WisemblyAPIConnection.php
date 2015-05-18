@@ -54,8 +54,6 @@ class WisemblyAPIConnection
         }
         $user = $this->createUserFromResponse($response);
         $sessionAPI = $this->createSessionAPI($response);
-//        $user = WisemblyAPIConnection::createUserFromResponse($response);
-//        $sessionAPI = WisemblyAPIConnection::createSessionAPI($response);
         
         //TODO: Add an exceptions for each error (Couldn't create user and couldn't create API)
         //TODO: Replace array with some CONNECTION RESPONSE OBJECT including both user and API. 
@@ -105,7 +103,7 @@ class WisemblyAPIConnection
         }catch(Exception $e){}
         
         $sessionAPI = new \MDegayon\WiseAPI\SessionAPI
-                                    ($response->body->success->data->token);
+                        ($response->body->success->data->token, $this->cache);
         
         return $sessionAPI;
     }
