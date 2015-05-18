@@ -22,11 +22,12 @@ class WizUserHelper
     /*
      * Function getFirstStream
      *
-     * The the stream from the user's first event
+     * Get the the stream from the user's first event from API
      *
      * @return (MDegayon\Wiz\Stream)
      */    
-    public function getFirstStream(){
+    public function getFirstStream()
+    {
       
         $firstStream = false;
         
@@ -34,14 +35,17 @@ class WizUserHelper
         
         if(sizeof($events) > 0){
             
-            //Create Event Helper
+            //Use API to get the message's stream of the first event 
+            $firstEvent = $events[0];
             
-            //Get event stream from event's helper 
+            $firstStream = $this->api->getStream($firstEvent->getKeyword());
             
             //and set it as the event's stream
+            $firstStream->setOwner($firstEvent);
             
-            //Return Stream
         }
+        //Return Stream
+        return $firstStream;
     }
     
 }
