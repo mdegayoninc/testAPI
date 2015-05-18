@@ -48,6 +48,27 @@ class WizUserHelper
         return $firstStream;
     }
     
+    /*
+     * Function getFirstEvent
+     *
+     * Get user's first event from API
+     *
+     * @return (MDegayon\Wiz\WizEvent)
+     */  
+    public function getFirstEvent()
+    {
+        $firstEvent = false;
+        
+        $events = $this->api->getUserEvents($this->user->getHash());
+        
+        if(sizeof($events) > 0){
+            
+            //Get first event from user events array
+            $firstEvent =  $events[0];
+        }
+        
+        return $firstEvent;        
+    }    
 }
 
 ?>
