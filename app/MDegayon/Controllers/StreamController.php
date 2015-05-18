@@ -144,7 +144,10 @@ class StreamController implements ControllerProviderInterface
         
         $hash = $this->getHashForConnection();
         $conf = new \MDegayon\Conf\Config();
-        $connectionResponse  = API::connect($conf->getParam('email'), 
+        
+        $connection = new API($app['cache'] );
+        
+        $connectionResponse  = $connection->connect($conf->getParam('email'), 
                                     $conf->getParam('secret'), 
                                     $conf->getParam('app_id'), 
                                     $hash);
