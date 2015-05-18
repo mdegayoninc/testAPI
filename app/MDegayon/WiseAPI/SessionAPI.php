@@ -46,7 +46,7 @@ class SessionAPI
         if ($response && 
             $response->code != WisemblyAPIConnection::SUCCESSFUL_REQUEST_CODE){
 
-            throw new InvalidArgumentException
+            throw new \InvalidArgumentException
                     ("Error while trying to connect to the API : ");
         }else{
             
@@ -78,7 +78,7 @@ class SessionAPI
         if ($response && 
             $response->code != WisemblyAPIConnection::SUCCESSFUL_REQUEST_CODE){
 
-            throw new InvalidArgumentException
+            throw new \InvalidArgumentException
                     ("Error while trying to connect to the API : ");
         }else{
             
@@ -110,7 +110,7 @@ class SessionAPI
         
         if ($response->code != WisemblyAPIConnection::SUCCESSFUL_REQUEST_CODE){
 
-            throw new InvalidArgumentException
+            throw new \InvalidArgumentException
                     ("Error while trying to connect to the API : ");
         }
         
