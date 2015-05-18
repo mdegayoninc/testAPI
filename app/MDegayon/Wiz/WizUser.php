@@ -21,5 +21,14 @@ class WizUser
         $this->email = $email;
         $this->company = $company;
     }
+    
+    public function getHash()
+    {
+        return $this->hash;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
 }
 ?>
