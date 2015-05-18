@@ -35,10 +35,11 @@ class StreamController implements ControllerProviderInterface
         
         //TODO : Check if session has expired
         //TODO : Handle scenario where only user or api can't be found. Try to connect again
+        //TODO : Replace Session by cache 
         
         if(!$user || !$api){
 
-            die("if");
+//            die("if");
             
             $hash = $this->getHashForConnection();
             $conf = new \MDegayon\Conf\Config();
@@ -56,6 +57,13 @@ class StreamController implements ControllerProviderInterface
         
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $stream  = $userHelper->getFirstStream();
+        
+        
+        return $app['twig']->render('index.twig', array(
+            'name' => $stream->getOwner()->getName(),
+            'messages' => $stream->getMessages(),
+        ));
+        
         
 //        $userFirstStreamCommand = new UserFirstStreamCommande($user, $api); 
       
