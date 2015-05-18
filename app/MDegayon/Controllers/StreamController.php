@@ -52,7 +52,9 @@ class StreamController implements ControllerProviderInterface
                     HttpKernelInterface::SUB_REQUEST, false); 
         }
         
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         if(!isset($_SESSION['user']) || !isset($_SESSION['api'])){
             
             if (! ($this->serverConnect()) ){
@@ -86,7 +88,9 @@ class StreamController implements ControllerProviderInterface
     
     public function showStream(Application $app)
     {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
         $user = isset($_SESSION['user']) ? $_SESSION['user'] : false;
         $api = isset($_SESSION['api']) ? $_SESSION['api'] : false;
