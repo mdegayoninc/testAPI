@@ -45,7 +45,7 @@ class StreamController implements ControllerProviderInterface
         //If there's no quote, we don't need to go any further. Just show stream
         if(!$quote){
             
-            return $this->showStream($app);  
+            return $app->redirect('/');  
         }
         
         session_start();
@@ -54,6 +54,7 @@ class StreamController implements ControllerProviderInterface
             if (! ($this->serverConnect()) ){
 
                 //Add error to template
+                return $app->redirect('/');  
             }
         }
         
@@ -69,11 +70,10 @@ class StreamController implements ControllerProviderInterface
             try{
                 $eventHelper->addMessageToStream($quote);
             }catch(Exeption $e){
-                //Add error to template
+                //Add error to template  
             }
         }
-        
-        return $this->showStream($app);
+        return $app->redirect('/');
     }
     
     public function showStream(Application $app)
