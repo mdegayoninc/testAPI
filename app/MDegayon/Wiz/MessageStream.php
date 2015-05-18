@@ -1,8 +1,8 @@
 <?php
 namespace MDegayon\Wiz;
 
-use MDegayon\Wiz\Message;
-use MDegayon\Wiz\WizEvent;
+use MDegayon\Wiz\Message as Message;
+use MDegayon\Wiz\WizEvent as WizEvent;
 
 /**
  * Description of MessageStream
@@ -20,6 +20,11 @@ class MessageStream
         $this->wizOwner = $wiz;
         $this->messages = $messages;
         
+    }
+    
+    public function setOwner(WizEvent $event)
+    {
+        $this->wizOwner = $event;
     }
     
     public function addMessage(Message $msg)
