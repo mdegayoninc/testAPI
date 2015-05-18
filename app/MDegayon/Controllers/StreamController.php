@@ -58,6 +58,7 @@ class StreamController implements ControllerProviderInterface
             if (! ($this->serverConnect()) ){
 
                 //Add error to template
+                $_SESSION['errorMessage'] = 'Unable to connect to remote API';
                 return $app->handle(Request::create('/'), 
                     HttpKernelInterface::SUB_REQUEST, false);  
             }
@@ -68,15 +69,15 @@ class StreamController implements ControllerProviderInterface
         
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $event = $userHelper->getFirstEvent();
-        
-        
+                
         if($event){
             
             $eventHelper = new \MDegayon\RemoteHelper\WizEventHelper($api, $event);
             try{
                 $eventHelper->addMessageToStream($quote);
             }catch(\InvalidArgumentException $e){
-                //Add error to template  
+                //Add error to template 
+                $_SESSION['errorMessage'] = 'Error while adding quote';
             }
         }
         return $app->handle(Request::create('/'), 
@@ -109,19 +110,19 @@ class StreamController implements ControllerProviderInterface
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $stream  = $userHelper->getFirstStream();       
         
-        return $app['twig']->render('index.twig', array(
-            'name' => $stream->getOwner()->getName(),
-            'messages' => $stream->getMessages(),
-        ));
+        $vars = array(  'name' => $stream->getOwner()->getName(),
+                        'messages' => $stream->getMessages(),);
         
+        if( isset($_SESSION['errorMessage'])){
+            $vars['errorMessage'] = $_SESSION['errorMessage'];
+            unset($_SESSION['errorMessage']);
+        } 
         
-//        $userFirstStreamCommand = new UserFirstStreamCommande($user, $api); 
-      
-        
-//        return "showStream!";
+        return $app['twig']->render('index.twig', $vars );
     }
     
-    private function getHashForConnection(){
+    private function getHashForConnection()
+    {
         
             $conf = new \MDegayon\Conf\Config();       
 
@@ -131,7 +132,8 @@ class StreamController implements ControllerProviderInterface
         
     }
     
-    private function serverConnect(){
+    private function serverConnect()
+    {
 
         $success = true;
         
