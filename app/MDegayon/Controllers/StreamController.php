@@ -15,6 +15,10 @@ class StreamController implements ControllerProviderInterface
 {
     
     
+    //TODO -> On the way to become a fat controller. REFACTOR ??
+    //It doesn't need a serverConnect method. That logic should be elsewhere.
+    //A RemoteDB encapsulating all that stuff, maybe.
+    
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
@@ -23,7 +27,56 @@ class StreamController implements ControllerProviderInterface
                             array($this, 
                             'showStream'))->bind('show_stream');
         
+        $controllers->post(  '/', 
+                            array($this, 
+                            'addQuote'))->bind('add_qoute');
+        
         return $controllers;
+    }
+    
+    public function addQuote(Application $app)
+    {
+        
+        //Handle form        
+        $request = $app['request_stack']->getCurrentRequest();
+        
+        $quote = $request->get('quote');
+        
+        if($quote){
+            
+            $helper = new \MDegayon\RemoteHelper\WizEventHelper($api, $event);
+            
+        //If there's no quote, we don't need to go any further. Just show stream
+        }else{
+            return $this->showStream($app);  
+        }
+        
+        session_start();
+        if(!isset($_SESSION['user']) || !isset($_SESSION['api'])){
+            
+            if ($this->serverConnect()){
+                
+                $user = isset($_SESSION['user']);
+                $api = isset($_SESSION['api']);
+             
+            }else{
+                //Add error to template
+            }
+        }
+        $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
+        $event = $userHelper->getFirstEvent();
+        
+        if($event){
+            
+            $eventHelper = new \MDegayon\RemoteHelper\WizEventHelper($api, $event);
+            try{
+                $eventHelper->addMessageToStream($quote);
+            }catch(Exeption $e){
+                //Add error to template
+            }
+        }
+        
+        return $this->showStream($app);
     }
     
     public function showStream(Application $app)
@@ -39,25 +92,18 @@ class StreamController implements ControllerProviderInterface
         
         if(!$user || !$api){
 
-//            die("if");
-            
-            $hash = $this->getHashForConnection();
-            $conf = new \MDegayon\Conf\Config();
-            $connectionResponse  = API::connect($conf->getParam('email'), 
-                                        $conf->getParam('secret'), 
-                                        $conf->getParam('app_id'), 
-                                        $hash);
-            if($connectionResponse){
-                $_SESSION['user'] = $connectionResponse[API::USER_KEY];
-                $_SESSION['api'] = $connectionResponse[API::SESSION_API_KEY];
+            if ($this->serverConnect()){
+                
+                $user = isset($_SESSION['user']);
+                $api = isset($_SESSION['api']);
+             
             }else{
-               //Some error 
+                
             }
         }
         
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
-        $stream  = $userHelper->getFirstStream();
-        
+        $stream  = $userHelper->getFirstStream();       
         
         return $app['twig']->render('index.twig', array(
             'name' => $stream->getOwner()->getName(),
@@ -68,7 +114,7 @@ class StreamController implements ControllerProviderInterface
 //        $userFirstStreamCommand = new UserFirstStreamCommande($user, $api); 
       
         
-        return "showStream!";
+//        return "showStream!";
     }
     
     private function getHashForConnection(){
@@ -79,6 +125,26 @@ class StreamController implements ControllerProviderInterface
                             $conf->getParam('app_id'). 
                             $conf->getParam('app_secret'));         
         
+    }
+    
+    private function serverConnect(){
+
+        $success = true;
+        
+        $hash = $this->getHashForConnection();
+        $conf = new \MDegayon\Conf\Config();
+        $connectionResponse  = API::connect($conf->getParam('email'), 
+                                    $conf->getParam('secret'), 
+                                    $conf->getParam('app_id'), 
+                                    $hash);
+        if($connectionResponse){
+            $_SESSION['user'] = $connectionResponse[API::USER_KEY];
+            $_SESSION['api'] = $connectionResponse[API::SESSION_API_KEY];
+            
+        }else{
+           //Some error 
+            $success = false;
+        }                
     }
 }
 
