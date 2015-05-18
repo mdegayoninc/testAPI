@@ -15,14 +15,16 @@ class SessionAPI
 {
     //TODO: Most functions looks almost the same. I'm repeating myself here. REFACTOR
 
-    private $token;
+    private $token,
+            $cache;
 
     const WISE_TOKEN_HEADER = 'Wisembly-Token';
     
     
-    public function __construct($token)
+    public function __construct($token, CacheInterface $cache)
     {
         $this->token = $token;
+        $this->cache = $cache;
     }
 
     public function getUserEvents($userHash)
