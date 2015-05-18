@@ -1,7 +1,6 @@
 <?php 
 require_once __DIR__.'/../vendor/autoload.php';
 
-
 use MDegayon\Controllers\StreamController as StreamController;
 use MDegayon\Controllers\ConnectionLogController as ConnectionLogController;
 
