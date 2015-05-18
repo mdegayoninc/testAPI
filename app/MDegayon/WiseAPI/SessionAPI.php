@@ -1,6 +1,7 @@
 <?php
 namespace MDegayon\WiseAPI;
 
+use \Httpful\Request as Request;
 use MDegayon\WiseAPI\WisemblyAPIConnection as Connection;
 /**
  * SessionAPI for logged in users
@@ -20,7 +21,7 @@ class SessionAPI
         $this->token = $token;
     }
 
-    public static function getUserEvents($userHash)
+    public function getUserEvents($userHash)
     {
         
         $event = false;
@@ -29,7 +30,7 @@ class SessionAPI
 
             $response = Request::get( 
                     Connection::API_ADDRESS .'/'.
-                    Connection::API_V4 . '/user/'.$eventKeyword.'/wiz')
+                    Connection::API_V4 . '/user/'.$userHash.'/wiz')
                 ->addHeader(SessionAPI::WISE_TOKEN_HEADER, $this->token)
                 ->send(); 
 
@@ -44,12 +45,12 @@ class SessionAPI
         
     }
     
-    public static function getStream()
+    public function getStream()
     {
         
     }
     
-    public static function addMessageToStream()
+    public function addMessageToStream()
     {
         
         
@@ -57,6 +58,8 @@ class SessionAPI
     
     private function createEventFromResponse(Httpful\Response $response)
     {
+        var_dump($response);
+        die("Events from response");
         
     }
     
