@@ -1,5 +1,7 @@
 <?php
 namespace MDegayon\Controllers;
+
+
 /**
  * Controller responsible of handling the messages stream
  *
@@ -8,6 +10,8 @@ namespace MDegayon\Controllers;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use MDegayon\WiseAPI\WisemblyAPIConnection as API;
+use Symfony\Component\HttpFoundation\Request as Request;
+use \Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernelInterface;
 //use MDegayon\Helper\WizUserHelper as WizUserHelper;
 //use \MDegayon\Command\UserFirstStreamCommande as UserFirstStreamCommande;
 
@@ -44,8 +48,8 @@ class StreamController implements ControllerProviderInterface
         
         //If there's no quote, we don't need to go any further. Just show stream
         if(!$quote){
-            
-            return $app->redirect('/');  
+            return $app->handle(Request::create('/'), 
+                    HttpKernelInterface::SUB_REQUEST, false); 
         }
         
         session_start();
@@ -54,7 +58,8 @@ class StreamController implements ControllerProviderInterface
             if (! ($this->serverConnect()) ){
 
                 //Add error to template
-                return $app->redirect('/');  
+                return $app->handle(Request::create('/'), 
+                    HttpKernelInterface::SUB_REQUEST, false);  
             }
         }
         
@@ -64,16 +69,18 @@ class StreamController implements ControllerProviderInterface
         $userHelper = new \MDegayon\RemoteHelper\WizUserHelper($api, $user); 
         $event = $userHelper->getFirstEvent();
         
+        
         if($event){
             
             $eventHelper = new \MDegayon\RemoteHelper\WizEventHelper($api, $event);
             try{
                 $eventHelper->addMessageToStream($quote);
-            }catch(Exeption $e){
+            }catch(\InvalidArgumentException $e){
                 //Add error to template  
             }
         }
-        return $app->redirect('/');
+        return $app->handle(Request::create('/'), 
+            HttpKernelInterface::SUB_REQUEST, false);
     }
     
     public function showStream(Application $app)
