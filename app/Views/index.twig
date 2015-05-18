@@ -51,14 +51,15 @@
               </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
     </nav>      
-      
-    {% if errorMessage %}    
-        <div class="alert alert-danger" role="alert">
-            {{ errorMessage }}
-        </div>
-    {% endif %}
-      
+            
     <div class="container">
+        
+        {% if errorMessage %}    
+            <div class="alert alert-danger" role="alert">
+                {{ errorMessage }}
+            </div>
+        {% endif %}
+        
         <h1>
             {{ name }}
         </h1>
