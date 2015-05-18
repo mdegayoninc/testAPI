@@ -15,7 +15,7 @@ class MessageStream
     private $messages,
             $wizOwner;
     
-    public function __construct(WizEvent $wiz, $messages = array())
+    public function __construct($messages = array() , WizEvent $wiz = null)
     {        
         $this->wizOwner = $wiz;
         $this->messages = $messages;
