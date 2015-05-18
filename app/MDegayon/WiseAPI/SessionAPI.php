@@ -90,9 +90,29 @@ class SessionAPI
         
     }
     
-    public function addMessageToStream()
+    public function addMessageToStream(Event $event, Message $message)
     {
-        //TODO
+        $userName = $message->getUser() ? '"'.$message->getUser().'"' : 'null';
+        $body = '{"quoteCreate" : {"hash" : "'.$message->getHash().
+                                '", "quote" : "'.$message->getQuote().
+                                '", "anonymous":true, '.
+                                '"username" : '.$userName.
+                                ', "via" : "'.$message->getVia().'"} }';
+
+
+        $response = Request::post( 
+                WisemblyAPIConnection::API_ADDRESS .'/'.
+                WisemblyAPIConnection::API_V4 . '/event/'.$event->getKeyword().'/quotes')
+                ->addHeader(SessionAPI::WISE_TOKEN_HEADER, $this->token)
+                ->sendsJson()
+                ->body($body)
+                ->send();
+        
+        if ($response->code != WisemblyAPIConnection::SUCCESSFUL_REQUEST_CODE){
+
+            throw new InvalidArgumentException
+                    ("Error while trying to connect to the API : ");
+        }
         
     }
     
@@ -110,8 +130,11 @@ class SessionAPI
     
     private function parseMessage($rawMessage)
     {
-        
-        return new Message($rawMessage->published_at, $rawMessage->quote);
+
+        return new Message( $rawMessage->published_at, 
+                            $rawMessage->quote, 
+                            $rawMessage->hash, 
+                            $rawMessage->via);
     }
     
     private function createEventsFromResponse(\Httpful\Response $response)
