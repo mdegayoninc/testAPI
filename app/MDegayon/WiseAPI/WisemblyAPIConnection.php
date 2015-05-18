@@ -3,6 +3,7 @@ namespace MDegayon\WiseAPI;
 
 use \Httpful\Request as Request;
 use MDegayon\Wiz\WizUser as WizUser;
+use MDegayon\Cache\CacheInterface as CacheInterface;
 
 
 /**
@@ -13,6 +14,9 @@ use MDegayon\Wiz\WizUser as WizUser;
 class WisemblyAPIConnection
 {
     
+    
+    private $cache;
+    
     const   
             USER_KEY = 'user',
             SESSION_API_KEY = 'api',
@@ -20,7 +24,12 @@ class WisemblyAPIConnection
             SUCCESSFUL_REQUEST_CODE = 200,
             API_V4 =   'api/4';
     
-    public static function connect($email, $secret, $app_id, $hash)
+    public function __construct(CacheInterface $cache) {
+        
+        $this->cache = $cache;
+    }
+    
+    public function connect($email, $secret, $app_id, $hash)
     {
     
         $response = false;
@@ -43,8 +52,10 @@ class WisemblyAPIConnection
             throw new InvalidArgumentException
                     ("Error while trying to connect to the API : ");
         }
-        $user = WisemblyAPIConnection::createUserFromResponse($response);
-        $sessionAPI = WisemblyAPIConnection::createSessionAPI($response);
+        $user = $this->createUserFromResponse($response);
+        $sessionAPI = $this->createSessionAPI($response);
+//        $user = WisemblyAPIConnection::createUserFromResponse($response);
+//        $sessionAPI = WisemblyAPIConnection::createSessionAPI($response);
         
         //TODO: Add an exceptions for each error (Couldn't create user and couldn't create API)
         //TODO: Replace array with some CONNECTION RESPONSE OBJECT including both user and API. 
@@ -58,14 +69,14 @@ class WisemblyAPIConnection
         return  $response;
     }
     
-    public static function connectAnonymous($appId, $appSecret)
+    public function connectAnonymous($appId, $appSecret)
     {
         
     }    
     
 //    TODO : Refactor these two methods (CreateXXXFrom...) might be placed in 
 //    some parser classes
-    private static function createUserFromResponse(\Httpful\Response $response)
+    private function createUserFromResponse(\Httpful\Response $response)
     {
 
         $user = false;
@@ -84,7 +95,7 @@ class WisemblyAPIConnection
         return $user;
     }
    
-    private static function createSessionAPI(\Httpful\Response $response)
+    private function createSessionAPI(\Httpful\Response $response)
     {
         $sessionAPI = false;
         
