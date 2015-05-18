@@ -47,7 +47,7 @@ class StreamController implements ControllerProviderInterface
         $quote = $request->get('quote');
         
         //If there's no quote, we don't need to go any further. Just show stream
-        if(!$quote){
+        if(!$quote || strlen(trim($quote)) == 0){
             return $app->handle(Request::create('/'), 
                     HttpKernelInterface::SUB_REQUEST, false); 
         }
