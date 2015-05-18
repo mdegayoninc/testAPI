@@ -25,7 +25,7 @@ class WizEventHelper
      *
      * @return (MDegayon\Wiz\Stream)
      */    
-    public function addMessageToStream(\MDegayon\Wiz\Message $txtQuote)
+    public function addMessageToStream($txtQuote)
     {      
         $quote  = $this->createMessage($txtQuote);
                     
@@ -38,14 +38,14 @@ class WizEventHelper
         date_default_timezone_set("UTC");
         
         $date = date("c", $messageDate);
-        $hash = $this->calcQuoteHash($txtQuote, $user, $via);
         $via = \MDegayon\Wiz\Message::VIA_DEFAULT;
+        $hash = $this->calcQuoteHash($txtQuote, $via);
 
         
         return new \MDegayon\Wiz\Message($date, $txtQuote, $hash, $via) ;        
     }
     
-    private function calcQuoteHash($txtQuote, $user, $via){
+    private function calcQuoteHash($txtQuote, $via){
         
         return 'qWeRtYu';
     }
