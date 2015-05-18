@@ -9,12 +9,16 @@ namespace MDegayon\Wiz;
 class Message {
     
     private $date, 
+            $hash,
+            $user,
             $quote;
     
-    public function __construct($date, $quote) 
+    public function __construct($date, $quote, $hash, $user = null) 
     {
         $this->date = $date;
         $this->quote = $quote;
+        $this->hash = $hash;
+        $this->user = $user;
     }
     
     public function getDate()
@@ -26,6 +30,16 @@ class Message {
     {
         return $this->quote;
     }
+    
+    public function getHash()
+    {
+        return $this->hash;
+    }
+    
+    public function getUser()
+    {
+        return $this->user;
+    }    
     
 }
 
