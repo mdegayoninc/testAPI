@@ -1,6 +1,7 @@
 <?php
 namespace MDegayon\Cache;
 
+use Symfony\Component\HttpFoundation\Session\Session as Session;
 /**
  * Simple cache using session
  *
@@ -10,11 +11,16 @@ class SessionCache implements \MDegayon\Cache\CacheInterface
 {
     
     private static $instance;
+    private $session = false;
     
     public function __construct(){
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+    }
+    
+    public function init(Session $session){
+        $this->session = $session;
     }
     
    public static function getInstance(){
@@ -27,12 +33,21 @@ class SessionCache implements \MDegayon\Cache\CacheInterface
     
     public function get($key) 
     {
-        return  isset($_SESSION[$key]) ? $_SESSION[$key] : false;
+        if($this->session){
+            
+            return $this->session->get($key, null);
+        }else{
+            throw new \Exception('Uninitialized Cache');
+        }
     }
 
     public function set($key, $value) 
     {
-        $_SESSION[$key] = $value;
+        if($this->session){
+            $this->session->set($key, $value);
+        }else{
+            throw new \Exception('Uninitialized Cache');
+        }
     }
 }
 
