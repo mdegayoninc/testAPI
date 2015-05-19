@@ -27,11 +27,11 @@ class StreamController implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
         
-        $controllers->get(  '/', 
+        $controllers->get(  '', 
                             array($this, 
                             'showStream'))->bind('show_stream');
         
-        $controllers->post(  '/', 
+        $controllers->post(  '', 
                             array($this, 
                             'addQuote'))->bind('add_qoute');
         
@@ -114,8 +114,11 @@ class StreamController implements ControllerProviderInterface
         $stream  = $userHelper->getFirstStream();       
         
         $vars = array(  'name' => $stream->getOwner()->getName(),
-                        'messages' => $stream->getMessages(),);
-        
+                        'messages' => $stream->getMessages(),
+                        'streamLink' => 'index.php',
+                        'connectionsLink' => 'index.php/connections/',
+                    );
+
         if( $app['session']->get('errorMessage', false) ){
             
             $vars['errorMessage'] = $app['session']->get('errorMessage', false);
