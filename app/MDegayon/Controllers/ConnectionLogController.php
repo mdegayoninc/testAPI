@@ -31,7 +31,9 @@ class ConnectionLogController implements ControllerProviderInterface
         $cache = $app['cache'];
         
         return $app['twig']->render('connections.twig', 
-                        array ('connections' => $cache->get(APIConnection::API_STATS_KEY)) );
+                        array ( 'connections' => $cache->get(APIConnection::API_STATS_KEY),
+                                'streamLink' => '/testAPI/web/index.php',
+                                'connectionsLink' => '',));
     }
 }
 
