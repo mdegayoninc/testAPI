@@ -18,6 +18,7 @@ class WisemblyAPIConnection
     private $cache;
     
     const   
+            API_STATS_KEY = 'api_stats_key',
             USER_KEY = 'user',
             SESSION_API_KEY = 'api',
             API_ADDRESS = 'https://api.wisembly.com',
