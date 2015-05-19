@@ -4,6 +4,7 @@ namespace MDegayon\WiseAPI;
 use \Httpful\Request as Request;
 use MDegayon\Wiz\WizUser as WizUser;
 use MDegayon\Cache\CacheInterface as CacheInterface;
+use \MDegayon\WiseAPI\APIInfoConnection as APIInfoConnection;
 
 
 /**
@@ -13,8 +14,7 @@ use MDegayon\Cache\CacheInterface as CacheInterface;
  */
 class WisemblyAPIConnection
 {
-    
-    
+        
     private $cache;
     
     const   
@@ -63,7 +63,16 @@ class WisemblyAPIConnection
         if($user && $sessionAPI){
             $response = array(  WisemblyAPIConnection::USER_KEY => $user,
                                 WisemblyAPIConnection::SESSION_API_KEY => $sessionAPI,);
-        } 
+        }
+        
+        //Generate stats
+        $stats = APIStats::getInstance();
+        $stats->addApiDataUsage( 
+                new APIInfoConnection(  'connection', 
+                                        date(strtotime('now'),'c'),
+                                        null,
+                                        $user->getName()
+                                        ));
         
         return  $response;
     }
