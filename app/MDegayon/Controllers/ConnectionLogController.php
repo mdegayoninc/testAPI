@@ -7,6 +7,8 @@ namespace MDegayon\Controllers;
  */
 use Silex\Application;
 use Silex\ControllerProviderInterface;
+use MDegayon\Cache\CacheInterface;
+use MDegayon\WiseAPI\WisemblyAPIConnection as APIConnection;
 
 class ConnectionLogController implements ControllerProviderInterface
 {
@@ -25,7 +27,11 @@ class ConnectionLogController implements ControllerProviderInterface
     
     public function showConnections(Application $app)
     {
-        return "showConnections";
+        //Get cache from App
+        $cache = $app['cache'];
+        
+        return $app['twig']->render('connections.twig', 
+                        array ('connections' => $cache->get(APIConnection::API_STATS_KEY)) );
     }
 }
 
