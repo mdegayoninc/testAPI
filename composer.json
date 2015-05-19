@@ -10,7 +10,8 @@
     "require": {
         "silex/silex": "~1.2",
         "nategood/httpful": "*",
-        "predis/predis": "1.1.*@dev"
+        "predis/predis": "1.1.*@dev",
+        "symfony/serializer" : "*"
     },
     "autoload": {
         "psr-4": {
