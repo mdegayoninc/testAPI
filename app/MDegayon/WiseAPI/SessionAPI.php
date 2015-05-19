@@ -59,7 +59,7 @@ class SessionAPI
         $stats = APIStats::getInstance();
         $stats->addApiDataUsage( 
                 new APIInfoConnection(  'getUserEvents', 
-                                        date(strtotime('now'),'c'),
+                                        date('c', strtotime('now')),
                                         $this->token,
                                         null ));       
 
@@ -98,7 +98,7 @@ class SessionAPI
         $stats = APIStats::getInstance();
         $stats->addApiDataUsage( 
                 new APIInfoConnection(  'getStream', 
-                                        date(strtotime('now'),'c'),
+                                        date('c', strtotime('now')),
                                         $this->token,
                                         null ));   
         return $stream;          
@@ -133,7 +133,7 @@ class SessionAPI
         $stats = APIStats::getInstance();
         $stats->addApiDataUsage( 
                 new APIInfoConnection(  'addMessageToStream', 
-                                        date(strtotime('now'),'c'),
+                                        date('c', strtotime('now')),
                                         $this->token,
                                         null ));          
         
