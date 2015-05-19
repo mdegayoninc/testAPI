@@ -69,7 +69,7 @@ class WisemblyAPIConnection
         $stats = APIStats::getInstance();
         $stats->addApiDataUsage( 
                 new APIInfoConnection(  'connection', 
-                                        date(strtotime('now'),'c'),
+                                        date('c', strtotime('now')),
                                         null,
                                         $user->getName()
                                         ));
