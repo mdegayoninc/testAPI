@@ -13,23 +13,26 @@ class SessionCache implements \MDegayon\Cache\CacheInterface
     private static $instance;
     private $session = false;
     
-    public function __construct(){
+    public function __construct()
+    {
 //        if (session_status() == PHP_SESSION_NONE) {
 //            session_start();
 //        }
     }
     
-    public function init(Session $session){
+    public function init(Session $session)
+    {
         $this->session = $session;
     }
     
-   public static function getInstance(){
+    public static function getInstance()
+    {
       if (  !self::$instance instanceof self)
       {
          self::$instance = new self;
       }
       return self::$instance;
-   }    
+    }    
     
     public function get($key) 
     {
