@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>title</title>
+    <title>Test API</title>
     
     <link rel="stylesheet" 
           href="https://bootswatch.com/yeti/bootstrap.min.css">
@@ -38,12 +38,12 @@
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="#">
-                            Stream <span class="sr-only">(current)</span>
+                        <a href=" {{ streamLink}} ">
+                            Stream
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href=" {{ connectionsLink }}">
                             Connections
                         </a>
                     </li>
@@ -78,10 +78,11 @@
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <strong>Function called :</strong>&nbsp;{{ currentConnection.method|e }}
-                            <strong>Date :</strong>&nbsp;{{ currentConnection.date|e }}
-                            <strong>User :</strong>&nbsp;{{ currentConnection.user|e }}
-                            <strong>Token :</strong>&nbsp;{{ currentConnection.token|e }}
+                            
+                            <strong>Function called :</strong>&nbsp;{{ currentConnection.method|e }}<br />
+                            <strong>Date :</strong>&nbsp;{{ currentConnection.date|e }}<br />
+                            <strong>User :</strong>&nbsp;{{ currentConnection.user|e }}<br />
+                            <strong>Token :</strong>&nbsp;{{ currentConnection.token|e }}<br />
                         </div>
                     </div>
                 {% else %}
