@@ -22,13 +22,11 @@ $app->register(new Silex\Provider\TwigServiceProvider(),
 ////Set up cache 
 $cache = SessionCache::getInstance();
 $cache->init($app['session']);
-
-//Init cache stats
-if(! $cache->get(MDegayon\WiseAPI\WisemblyAPIConnection::API_STATS_KEY)){
-    
-    $cache->set(MDegayon\WiseAPI\WisemblyAPIConnection::API_STATS_KEY, array());
-}
 $app['cache'] = $cache;
+
+//Set up stats
+$stats = MDegayon\WiseAPI\APIStats::getInstance();
+$stats->init($cache);
 
 $app->run();
 
