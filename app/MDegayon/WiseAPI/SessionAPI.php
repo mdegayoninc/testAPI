@@ -55,6 +55,13 @@ class SessionAPI
             $events = $this->createEventsFromResponse($response);
         }
         
+         //Generate stats
+        $stats = APIStats::getInstance();
+        $stats->addApiDataUsage( 
+                new APIInfoConnection(  'getUserEvents', 
+                                        date(strtotime('now'),'c'),
+                                        $this->token,
+                                        null ));       
 
         return $events;      
     }
@@ -87,7 +94,13 @@ class SessionAPI
             $stream = $this->createStreamFromResponse($response);
         }
         
-
+         //Generate stats
+        $stats = APIStats::getInstance();
+        $stats->addApiDataUsage( 
+                new APIInfoConnection(  'getStream', 
+                                        date(strtotime('now'),'c'),
+                                        $this->token,
+                                        null ));   
         return $stream;          
         
     }
@@ -116,8 +129,17 @@ class SessionAPI
                     ("Error while trying to connect to the API : ");
         }
         
+         //Generate stats
+        $stats = APIStats::getInstance();
+        $stats->addApiDataUsage( 
+                new APIInfoConnection(  'addMessageToStream', 
+                                        date(strtotime('now'),'c'),
+                                        $this->token,
+                                        null ));          
+        
     }
     
+    //TODO : Move these parsing method to new parser classes
     private function createStreamFromResponse(\Httpful\Response $response)
     {
         $messages = array();
