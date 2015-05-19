@@ -1,18 +1,19 @@
 <?php
 namespace MDegayon\Cache;
 
+use Symfony\Component\Serializer\Serializer;
+use Predis\Client;
 /**
  * Description of RedisCache
  *
  * @author Laura
  */
-class RedisCache implements \MDegayon\Cache\CacheInterface{
-    
-    
-    
+class RedisCache implements \MDegayon\Cache\CacheInterface
+{
+            
     private static $instance;
-    private $redis = false;
-    
+    private $redis = false,
+            $serializer = false;
     
     public static function getInstance()
     {
@@ -23,15 +24,16 @@ class RedisCache implements \MDegayon\Cache\CacheInterface{
        return self::$instance;
     }
     
-    public function init(Session $session)
+    public function init( Client $redis,  Serializer $serializer)
     {
-        $this->session = $session;
+        $this->redis = $redis;
+        $this->serializer = $serializer;
     }    
     
     public function get($key) 
     {
         
-        if($this->redis){
+        if($this->redis && $this->serializer){
             
             return $this->redis->get($key, null);
         }else{
@@ -41,7 +43,8 @@ class RedisCache implements \MDegayon\Cache\CacheInterface{
 
     public function set($key, $value) 
     {
-        if($this->redis){
+        if($this->redis && $this->serializer){
+            
             $this->redis->set($key, $value);
         }else{
             throw new \Exception('Uninitialized Cache');
