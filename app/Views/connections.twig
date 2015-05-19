@@ -74,18 +74,18 @@
             <div class="row"></div><br />
             
             <div class="col-md-12">
-                {% for message in messages %}
+                {% for currentConnection in connections %}
 
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h4>
-                                {{ message.quote|e }}
-                            </h4>
-                            <small>publied at: {{ message.date|e }}</small>
+                            <strong>Function called :</strong>&nbsp;{{ currentConnection.method|e }}
+                            <strong>Date :</strong>&nbsp;{{ currentConnection.date|e }}
+                            <strong>User :</strong>&nbsp;{{ currentConnection.user|e }}
+                            <strong>Token :</strong>&nbsp;{{ currentConnection.token|e }}
                         </div>
                     </div>
                 {% else %}
-                    <div class="alert alert-info" role="alert">No messages found</div>
+                    <div class="alert alert-info" role="alert">No connections yet</div>
                 {% endfor %}
             </div>          
         </section>
