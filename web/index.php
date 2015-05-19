@@ -28,7 +28,7 @@ Predis\Autoloader::register();
 
 $cache = RedisCache::getInstance();
 $cache->init(new Predis\Client(), $app['serializer']);
-$app['cache'] = $cache;
+$app['cache'] =  $cache;
 
 // Set up cache (SessionCache)
 /*
