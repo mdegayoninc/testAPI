@@ -9,6 +9,7 @@ use Silex\Application;
 use Silex\ControllerProviderInterface;
 use MDegayon\Cache\CacheInterface;
 use MDegayon\WiseAPI\WisemblyAPIConnection as APIConnection;
+use MDegayon\WiseAPI\APIStats as APIStats;
 
 class ConnectionLogController implements ControllerProviderInterface
 {
@@ -29,9 +30,10 @@ class ConnectionLogController implements ControllerProviderInterface
     {
         //Get cache from App
         $cache = $app['cache'];
+        $data = APIStats::getInstance();
         
         return $app['twig']->render('connections.twig', 
-                        array ( 'connections' => $cache->get(APIConnection::API_STATS_KEY),
+                        array ( 'connections' => $data->getData(),
                                 'streamLink' => '/testAPI/web/index.php',
                                 'connectionsLink' => '',));
     }
