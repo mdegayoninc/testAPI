@@ -13,7 +13,7 @@ class Config {
         'app_id' => 'miguel',
         'app_secret' => 'wisembly',
         'email' => 'mdegayon@gmail.com',
-        'secret' => 'chachadita',
+        'secret' => '',
     );
     
     public function getParam($key){
