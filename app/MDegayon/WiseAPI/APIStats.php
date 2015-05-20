@@ -16,22 +16,26 @@ class APIStats
             $dataArray = array();
     
     
-    public function init(Cache $cache){
+    public function init(Cache $cache)
+    {
         
         $this->cache = $cache;
-        
+       
         //Check if stats already exist in cache. 
-        $dataArray = $this->cache->get(WisemblyAPIConnection::API_STATS_KEY);        
-        if($dataArray){
+        $cachedAPIStat = $this->cache->get(WisemblyAPIConnection::API_STATS_KEY);        
+        
+        if($cachedAPIStat){
             
-            $this->dataArray = $dataArray;
+            $this->dataArray = $cachedAPIStat->dataArray;
             
         }else{
-            $this->cache->set(WisemblyAPIConnection::API_STATS_KEY, $this->dataArray);
+
+            $this->cache->set(WisemblyAPIConnection::API_STATS_KEY, $this);
         }
     }
     
-   public static function getInstance(){
+    public static function getInstance()
+    {
       if (  !self::$instance instanceof self)
       {
          self::$instance = new self;
@@ -39,14 +43,24 @@ class APIStats
       return self::$instance;
    }    
    
-   public function addApiDataUsage( \MDegayon\WiseAPI\APIInfoConnection $data){
-       
+    public function addApiDataUsage( \MDegayon\WiseAPI\APIInfoConnection $data)
+    {       
        //Add data to stats
        $this->dataArray[] = $data;
        
        //Update stats from cache
-       $this->cache->set(WisemblyAPIConnection::API_STATS_KEY, $this->dataArray);
+       $this->cache->set(WisemblyAPIConnection::API_STATS_KEY, $this);
    }
+   
+    public function getData(){
+       
+       return $this->dataArray;
+    }
+   
+    public function setData($data)
+    {
+       $this->dataArray = $data;
+    }
     
 }
 
