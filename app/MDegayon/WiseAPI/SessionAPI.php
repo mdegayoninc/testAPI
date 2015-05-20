@@ -21,7 +21,7 @@ class SessionAPI
     const WISE_TOKEN_HEADER = 'Wisembly-Token';
     
     
-    public function __construct($token, CacheInterface $cache)
+    public function __construct($token, \MDegayon\Cache\CacheInterface $cache)
     {
         $this->token = $token;
         $this->cache = $cache;
