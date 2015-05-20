@@ -6,6 +6,9 @@ use MDegayon\Controllers\ConnectionLogController as ConnectionLogController;
 use MDegayon\Cache\CacheInterface as CacheInterface;
 use MDegayon\Cache\SessionCache as SessionCache;
 use MDegayon\Cache\RedisCache as RedisCache;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer as GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 
 $app = new Silex\Application();
@@ -25,6 +28,11 @@ $app->register(new Silex\Provider\TwigServiceProvider(),
 
 // Set up cache (RedisCache)
 Predis\Autoloader::register();
+$normalizer = new GetSetMethodNormalizer();
+$normalizer->setIgnoredAttributes(array('cache','instance'));
+$encoder = new JsonEncoder();
+
+$app['serializer'] =  new Serializer(array($normalizer), array($encoder));
 
 $cache = RedisCache::getInstance();
 $cache->init(new Predis\Client(), $app['serializer']);
