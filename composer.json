@@ -11,7 +11,8 @@
         "silex/silex": "~1.2",
         "nategood/httpful": "*",
         "predis/predis": "1.1.*@dev",
-        "symfony/serializer" : "*"
+        "symfony/serializer" : "*",
+        "twig/twig": "1.8.2"
     },
     "autoload": {
         "psr-4": {
